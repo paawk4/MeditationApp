@@ -6,7 +6,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
@@ -14,10 +13,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.meditationapp.R
 import com.example.meditationapp.models.Screen
+import com.example.meditationapp.ui.screens.mainscreen.HomeScreen
+import com.example.meditationapp.ui.screens.mainscreen.ProfileScreen
+import com.example.meditationapp.ui.screens.mainscreen.SoundScreen
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
-fun HomeScreen() {
+fun MainScreen() {
     val navController = rememberNavController()
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
 
@@ -76,9 +78,10 @@ fun HomeScreen() {
     ) {
         it.calculateBottomPadding()
         NavHost(navController = navController, startDestination = "home") {
-            composable("home") { }
-            composable("sound") { Text(text = "sound") }
-            composable("profile") { Text(text = "profile") }
+            composable("home") { HomeScreen("Павел") }
+            composable("sound") { SoundScreen() }
+            composable("profile") { ProfileScreen() }
         }
     }
+
 }

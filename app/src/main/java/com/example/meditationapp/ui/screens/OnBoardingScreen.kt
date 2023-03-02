@@ -40,13 +40,11 @@ fun OnBoardingScreen() {
         )
         Text(
             text = "ПРИВЕТ",
-            color = Color.White,
             fontSize = 34.sp,
             modifier = Modifier.padding(top = 30.dp),
             fontFamily = FontFamily(Font(R.font.alegreya_bold))
         )
         Text(
-            color = Color.White,
             text = "Наслаждайся отборочными.\n" +
                     "Будь внимателен.\n" +
                     "Делай хорошо.",
@@ -75,7 +73,7 @@ fun OnBoardingScreen() {
             Text(
                 text = "Еще нет аккаунта? Зарегистрируйтесь",
                 fontSize = 20.sp,
-                textAlign = TextAlign.Center, color = Color.White,
+                textAlign = TextAlign.Center,
                 lineHeight = 24.sp
             )
         }

@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.example.meditationapp.ui.screens.HomeScreen
-import com.example.meditationapp.ui.screens.OnBoardingScreen
+import com.example.meditationapp.ui.screens.MainScreen
 import com.example.meditationapp.ui.theme.MeditationAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +19,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    OnBoardingScreen()
+                    MainScreen()
                 }
             }
         }
