@@ -8,9 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.meditationapp.models.FeelingsListItem
+import com.example.meditationapp.models.QuoteListItem
 import com.example.meditationapp.remote.RetrofitApi
 import com.example.meditationapp.remote.retrofitInit
+import com.example.meditationapp.ui.screens.LoginScreen
+import com.example.meditationapp.ui.screens.OnBoardingScreen
 import com.example.meditationapp.ui.screens.main_screen.MainScreen
 import com.example.meditationapp.ui.theme.MeditationAppTheme
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +33,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         retrofitApi = retrofitInit()
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -36,7 +46,11 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxSize(),
                                 color = MaterialTheme.colors.background
                             ) {
-                                MainScreen(listFeelings, listQuotes)
+                                MyAppNavHost(
+                                    listFeelings = listFeelings,
+                                    listQuotes = listQuotes,
+                                    retrofitApi = retrofitApi
+                                )
                             }
                         }
                     }
@@ -54,6 +68,29 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    fun MyAppNavHost(
+        modifier: Modifier = Modifier,
+        navController: NavHostController = rememberNavController(),
+        startDestination: String = "start",
+        listFeelings: List<FeelingsListItem>,
+        listQuotes: List<QuoteListItem>,
+        retrofitApi: RetrofitApi
+    ) {
+        NavHost(
+            modifier = modifier,
+            navController = navController,
+            startDestination = startDestination
+        ) {
+            composable("start") {
+                OnBoardingScreen(navController)
+            }
+            composable("login") { LoginScreen(navController, retrofitApi) }
+            composable("register") { Text(text = "Регистрация") }
+            composable("main") { MainScreen(listFeelings = listFeelings, listQuotes = listQuotes) }
         }
     }
 }

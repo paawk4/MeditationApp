@@ -11,14 +11,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
-import com.example.meditationapp.models.QuoteModel
+import com.example.meditationapp.models.QuoteListItem
 import com.example.meditationapp.models.Screen
+import com.example.meditationapp.ui.screens.user
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
-fun MainScreen(listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteModel>) {
+fun MainScreen(listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteListItem>) {
     val navController = rememberNavController()
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
 
@@ -45,8 +47,8 @@ fun MainScreen(listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteModel
                         tint = Color.White
                     )
                     IconButton(onClick = { }) {
-                        Image(
-                            painter = painterResource(id = R.drawable.profile_pic),
+                        AsyncImage(
+                            model = user.avatar,
                             contentDescription = null,
                             modifier = Modifier.size(45.dp)
                         )

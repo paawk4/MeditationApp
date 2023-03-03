@@ -16,12 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
-import com.example.meditationapp.models.QuoteModel
+import com.example.meditationapp.models.QuoteListItem
 import com.example.meditationapp.ui.screens.single_items.FeelingsItem
 import com.example.meditationapp.ui.screens.single_items.QuoteItem
+import com.example.meditationapp.ui.screens.user
 
 @Composable
-fun HomeScreen(name: String, listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteModel>) {
+fun HomeScreen(name: String, listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteListItem>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,7 +30,7 @@ fun HomeScreen(name: String, listFeelings: List<FeelingsListItem>, listQuotes: L
     ) {
         item {
             Text(
-                text = "С возвращением, $name!",
+                text = "С возвращением, ${user.nickname}!",
                 fontFamily = FontFamily(Font(R.font.alegreya_medium)),
                 fontSize = 34.sp,
                 lineHeight = 40.sp

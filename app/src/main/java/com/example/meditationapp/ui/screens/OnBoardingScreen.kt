@@ -1,6 +1,5 @@
 package com.example.meditationapp.ui.screens
 
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -17,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.meditationapp.R
-import com.example.meditationapp.ui.theme.fonts
 
 @Composable
-fun OnBoardingScreen() {
+fun OnBoardingScreen(navController: NavHostController) {
     Image(
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop,
@@ -29,7 +27,7 @@ fun OnBoardingScreen() {
         contentDescription = "bg"
     )
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -55,7 +53,7 @@ fun OnBoardingScreen() {
         )
         Button(
             onClick = {
-
+                navController.navigate("login")
             },
             modifier = Modifier
                 .padding(top = 100.dp, start = 27.dp, end = 27.dp)
@@ -68,7 +66,7 @@ fun OnBoardingScreen() {
             )
         }
         TextButton(onClick = {
-
+            navController.navigate("register")
         }) {
             Text(
                 text = "Еще нет аккаунта? Зарегистрируйтесь",
