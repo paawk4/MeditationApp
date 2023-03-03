@@ -1,4 +1,4 @@
-package com.example.meditationapp.ui.screens
+package com.example.meditationapp.ui.screens.main_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -15,9 +15,6 @@ import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuoteModel
 import com.example.meditationapp.models.Screen
-import com.example.meditationapp.ui.screens.main_screen.HomeScreen
-import com.example.meditationapp.ui.screens.main_screen.ProfileScreen
-import com.example.meditationapp.ui.screens.main_screen.SoundScreen
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
