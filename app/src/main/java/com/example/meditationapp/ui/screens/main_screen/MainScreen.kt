@@ -12,14 +12,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.meditationapp.R
+import com.example.meditationapp.models.FeelingsListItem
+import com.example.meditationapp.models.QuoteModel
 import com.example.meditationapp.models.Screen
-import com.example.meditationapp.ui.screens.mainscreen.HomeScreen
-import com.example.meditationapp.ui.screens.mainscreen.ProfileScreen
-import com.example.meditationapp.ui.screens.mainscreen.SoundScreen
+import com.example.meditationapp.ui.screens.main_screen.HomeScreen
+import com.example.meditationapp.ui.screens.main_screen.ProfileScreen
+import com.example.meditationapp.ui.screens.main_screen.SoundScreen
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
-fun MainScreen() {
+fun MainScreen(listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteModel>) {
     val navController = rememberNavController()
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
 
@@ -76,12 +78,10 @@ fun MainScreen() {
             }
         }
     ) {
-        it.calculateBottomPadding()
-        NavHost(navController = navController, startDestination = "home") {
-            composable("home") { HomeScreen("Павел") }
+        NavHost(navController = navController, startDestination = "home", modifier = Modifier.padding(bottom = it.calculateBottomPadding())) {
+            composable("home") { HomeScreen("Павел", listFeelings, listQuotes) }
             composable("sound") { SoundScreen() }
             composable("profile") { ProfileScreen() }
         }
     }
-
 }
