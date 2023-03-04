@@ -44,6 +44,6 @@ fun MeditationNavHost(
         composable(Screen.Start.route) { OnBoardingScreen(navController) }
         composable(Screen.Login.route) { LoginScreen(navController, retrofitApi) }
         composable(Screen.Register.route) { Text(text = "Регистрация") }
-        composable(Screen.Main.route) { MainScreen(listFeelings, listQuotes) }
+        composable(Screen.Main.route) { MainScreen(navController, listFeelings, listQuotes) }
     }
 }

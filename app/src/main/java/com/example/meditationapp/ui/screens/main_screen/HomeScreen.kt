@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.sp
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuoteListItem
+import com.example.meditationapp.models.user
 import com.example.meditationapp.ui.screens.single_items.FeelingsItem
 import com.example.meditationapp.ui.screens.single_items.QuoteItem
-import com.example.meditationapp.ui.screens.user
 
 @Composable
 fun HomeScreen(
@@ -29,7 +29,7 @@ fun HomeScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 25.dp, top = 30.dp)
+            .padding(start = 25.dp)
     ) {
         item {
             Text(

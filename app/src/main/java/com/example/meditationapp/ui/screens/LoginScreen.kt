@@ -25,6 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.meditationapp.R
 import com.example.meditationapp.models.NotAuthUser
 import com.example.meditationapp.models.UserModel
+import com.example.meditationapp.models.user
 import com.example.meditationapp.remote.RetrofitApi
 import com.example.meditationapp.ui.screens.main_screen.MainScreen
 import com.example.meditationapp.ui.theme.bgColor
@@ -35,7 +36,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import okhttp3.internal.wait
 
-var user = UserModel("", "", "noname", "", "")
+
 
 @Composable
 fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {

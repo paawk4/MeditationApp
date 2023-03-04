@@ -1,12 +1,22 @@
 package com.example.meditationapp.ui.screens.main_screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentRecomposeScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,30 +25,36 @@ import coil.compose.AsyncImage
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuoteListItem
-import com.example.meditationapp.navigation.MeditationNavHost
+import com.example.meditationapp.models.user
 import com.example.meditationapp.navigation.Screen
-import com.example.meditationapp.ui.screens.user
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
 fun MainScreen(
+    navController: NavHostController,
     listFeelings: List<FeelingsListItem>,
     listQuotes: List<QuoteListItem>
 ) {
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
-    val navController = rememberNavController()
+    val mainNavController = rememberNavController()
+    val currentDestination = remember { mutableStateOf(Screen.Home?.route) }
     Scaffold(
         topBar = {
             TopAppBar(
                 backgroundColor = bgColor,
-                contentPadding = PaddingValues(top = 40.dp, start = 25.dp, end = 25.dp),
+                contentPadding = PaddingValues(top = 10.dp, start = 25.dp, end = 25.dp, bottom = 30.dp),
                 elevation = 0.dp
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                ConstraintLayout(
+                    modifier = Modifier
+                        .fillMaxWidth()
                 ) {
-                    IconButton(onClick = { }) {
+                    val (menu, logo, profilePic) = createRefs()
+                    IconButton(onClick = { }, modifier = Modifier.constrainAs(menu) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    }) {
                         Icon(
                             painter = painterResource(id = R.drawable.menu_btn),
                             contentDescription = null,
@@ -47,17 +63,47 @@ fun MainScreen(
                     }
                     Icon(
                         painter = painterResource(id = R.drawable.logo), contentDescription = null,
-                        tint = Color.White
+                        tint = Color.White,
+                        modifier = Modifier.constrainAs(logo) {
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
                     )
-                    IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
-                        AsyncImage(
-                            model = user.avatar,
-                            contentDescription = null,
-                            modifier = Modifier.size(45.dp)
-                        )
+                    if (currentDestination.value == Screen.Profile.route) {
+                        TextButton(
+                            onClick = { navController.navigate(Screen.Login.route) },
+                            modifier = Modifier.constrainAs(profilePic) {
+                                end.linkTo(parent.end)
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                            }) {
+                            Text(
+                                text = "exit",
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 18.sp
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = {
+                            mainNavController.navigate(Screen.Profile.route)
+                            currentDestination.value = mainNavController.currentDestination?.route
+                        },
+                            modifier = Modifier.constrainAs(profilePic) {
+                                end.linkTo(parent.end)
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                            }) {
+                            Card(shape = RoundedCornerShape(25.dp)) {
+                                AsyncImage(
+                                    model = user.avatar,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(45.dp)
+                                )
+                            }
+
+                        }
                     }
                 }
-
             }
         },
         bottomBar = {
@@ -66,15 +112,28 @@ fun MainScreen(
                     BottomNavigationItem(
                         selected = false,
                         onClick = {
-                            navController.navigate(screen.route)
+                            mainNavController.navigate(screen.route)
+                            if (mainNavController.currentDestination?.route != Screen.Profile.route)
+                                currentDestination.value = mainNavController.currentDestination?.route
+                            else {
+                                currentDestination.value = mainNavController.currentDestination?.route
+                            }
                         },
                         icon = {
                             screen.icon?.let { painterResource(id = it) }?.let {
-                                Icon(
-                                    painter = it,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
+                                if(currentDestination.value == screen.route){
+                                    Icon(
+                                        painter = it,
+                                        contentDescription = null,
+                                        tint = Color.White
+                                    )
+                                }else{
+                                    Icon(
+                                        painter = it,
+                                        contentDescription = null,
+                                        tint = Color(0xFF959697)
+                                    )
+                                }
                             }
                         }
                     )
@@ -83,7 +142,7 @@ fun MainScreen(
         }
     ) {
         NavHost(
-            navController = navController,
+            navController = mainNavController,
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(bottom = it.calculateBottomPadding())
         ) {

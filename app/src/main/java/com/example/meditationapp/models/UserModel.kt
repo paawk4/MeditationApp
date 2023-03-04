@@ -2,6 +2,8 @@ package com.example.meditationapp.models
 
 import com.google.gson.annotations.SerializedName
 
+var user = UserModel("", "", "Эмиль", "https://i.imgur.com/LKuc1Pq.png", "")
+
 data class UserModel(
     val id: String,
     val email: String,
