@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,19 +15,18 @@ import coil.compose.AsyncImage
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuoteListItem
-import com.example.meditationapp.models.Screen
-import com.example.meditationapp.remote.RetrofitApi
+import com.example.meditationapp.navigation.MeditationNavHost
+import com.example.meditationapp.navigation.Screen
 import com.example.meditationapp.ui.screens.user
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
 fun MainScreen(
-    feelingsList: List<FeelingsListItem>,
-    quotesList: List<QuoteListItem>
+    listFeelings: List<FeelingsListItem>,
+    listQuotes: List<QuoteListItem>
 ) {
-    val navController = rememberNavController()
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
-
+    val navController = rememberNavController()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -49,7 +49,7 @@ fun MainScreen(
                         painter = painterResource(id = R.drawable.logo), contentDescription = null,
                         tint = Color.White
                     )
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
                         AsyncImage(
                             model = user.avatar,
                             contentDescription = null,
@@ -69,11 +69,13 @@ fun MainScreen(
                             navController.navigate(screen.route)
                         },
                         icon = {
-                            Icon(
-                                painter = painterResource(id = screen.icon),
-                                contentDescription = null,
-                                tint = Color.White
-                            )
+                            screen.icon?.let { painterResource(id = it) }?.let {
+                                Icon(
+                                    painter = it,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
                         }
                     )
                 }
@@ -82,12 +84,12 @@ fun MainScreen(
     ) {
         NavHost(
             navController = navController,
-            startDestination = "home",
+            startDestination = Screen.Home.route,
             modifier = Modifier.padding(bottom = it.calculateBottomPadding())
         ) {
-            composable("home") { HomeScreen(feelingsList, quotesList) }
-            composable("sound") { SoundScreen() }
-            composable("profile") { ProfileScreen() }
+            composable(Screen.Home.route) { HomeScreen(listFeelings, listQuotes) }
+            composable(Screen.Sound.route) { SoundScreen() }
+            composable(Screen.Profile.route) { ProfileScreen() }
         }
     }
 }
