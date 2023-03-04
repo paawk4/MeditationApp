@@ -1,5 +1,8 @@
 package com.example.meditationapp.ui.screens
 
+import android.annotation.SuppressLint
+import android.text.method.PasswordTransformationMethod
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,9 +13,11 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -23,10 +28,14 @@ import com.example.meditationapp.models.UserModel
 import com.example.meditationapp.remote.RetrofitApi
 import com.example.meditationapp.ui.screens.main_screen.MainScreen
 import com.example.meditationapp.ui.theme.bgColor
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import okhttp3.internal.wait
 
-var user = UserModel("","","","","")
+var user = UserModel("", "", "noname", "", "")
 
 @Composable
 fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {
@@ -66,6 +75,7 @@ fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {
                 unfocusedIndicatorColor = Color.White
             ),
             singleLine = true,
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
             keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions(
                 onNext = {
@@ -85,6 +95,8 @@ fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {
                 unfocusedIndicatorColor = Color.White
             ),
             singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
             keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -110,6 +122,7 @@ fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {
     }
 }
 
+@SuppressLint("CheckResult")
 fun login(
     login: String,
     password: String,
@@ -117,16 +130,27 @@ fun login(
     retrofitApi: RetrofitApi
 ) {
     if (login.isNotBlank() && password.isNotBlank()) {
+        var isEmailTrue = false
         login.forEach {
             if (it == '@') {
-                CoroutineScope(Dispatchers.Main).launch {
-                    user = retrofitApi.loginUser(NotAuthUser(login, password))
-                    if (user.id.isNotEmpty()){
-                        navController.navigate("main"){}
-                    }
-                }
-
+                isEmailTrue = true
             }
+        }
+        if (isEmailTrue){
+            retrofitApi.loginUser(NotAuthUser(login, password))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ result ->
+                    user = result
+                    navController.navigate("main")
+                }, { error ->
+                    error.printStackTrace()
+                    Toast.makeText(
+                        APP_ACTIVITY,
+                        "Введен неверный логин или пароль",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
         }
     }
 }

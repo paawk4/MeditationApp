@@ -17,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuoteListItem
 import com.example.meditationapp.remote.RetrofitApi
-import com.example.meditationapp.remote.retrofitInit
+import com.example.meditationapp.ui.screens.APP_ACTIVITY
 import com.example.meditationapp.ui.screens.LoginScreen
 import com.example.meditationapp.ui.screens.OnBoardingScreen
 import com.example.meditationapp.ui.screens.main_screen.MainScreen
@@ -34,7 +34,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        retrofitApi = retrofitInit()
+        APP_ACTIVITY = this
+        retrofitApi = RetrofitApi.create()
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val listFeelings = retrofitApi.getFeelings().data
@@ -70,27 +72,26 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
 
-    @Composable
-    fun MyAppNavHost(
-        modifier: Modifier = Modifier,
-        navController: NavHostController = rememberNavController(),
-        startDestination: String = "start",
-        listFeelings: List<FeelingsListItem>,
-        listQuotes: List<QuoteListItem>,
-        retrofitApi: RetrofitApi
+@Composable
+fun MyAppNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = "main",
+    retrofitApi: RetrofitApi,
+    listFeelings: List<FeelingsListItem>,
+    listQuotes: List<QuoteListItem>
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination
     ) {
-        NavHost(
-            modifier = modifier,
-            navController = navController,
-            startDestination = startDestination
-        ) {
-            composable("start") {
-                OnBoardingScreen(navController)
-            }
-            composable("login") { LoginScreen(navController, retrofitApi) }
-            composable("register") { Text(text = "Регистрация") }
-            composable("main") { MainScreen(listFeelings = listFeelings, listQuotes = listQuotes) }
-        }
+        composable("start") { OnBoardingScreen(navController) }
+        composable("login") { LoginScreen(navController, retrofitApi) }
+        composable("register") { Text(text = "Регистрация") }
+        composable("main") { MainScreen(listFeelings, listQuotes) }
     }
+
 }

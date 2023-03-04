@@ -16,7 +16,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.meditationapp.MainActivity
 import com.example.meditationapp.R
+
+lateinit var APP_ACTIVITY: MainActivity
 
 @Composable
 fun OnBoardingScreen(navController: NavHostController) {

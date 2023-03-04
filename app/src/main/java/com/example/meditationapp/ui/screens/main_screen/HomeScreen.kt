@@ -22,7 +22,10 @@ import com.example.meditationapp.ui.screens.single_items.QuoteItem
 import com.example.meditationapp.ui.screens.user
 
 @Composable
-fun HomeScreen(name: String, listFeelings: List<FeelingsListItem>, listQuotes: List<QuoteListItem>) {
+fun HomeScreen(
+    listFeelings: List<FeelingsListItem>,
+    listQuotes: List<QuoteListItem>
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,14 +45,17 @@ fun HomeScreen(name: String, listFeelings: List<FeelingsListItem>, listQuotes: L
                 lineHeight = 26.sp,
                 modifier = Modifier.alpha(0.7f)
             )
+
             LazyRow(modifier = Modifier.padding(top = 25.dp)) {
-                items(listFeelings){
+                items(listFeelings) {
                     FeelingsItem(item = it)
                 }
             }
         }
-        items(listQuotes){
-            QuoteItem(item = it)
+        if (listQuotes.isNotEmpty()) {
+            items(listQuotes) {
+                QuoteItem(item = it)
+            }
         }
     }
 }
