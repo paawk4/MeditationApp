@@ -144,6 +144,7 @@ fun login(
                 .subscribe({ result ->
                     user = result
                     navController.navigate("main")
+                    navController.enableOnBackPressed(false)
                 }, { error ->
                     error.printStackTrace()
                     Toast.makeText(

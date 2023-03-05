@@ -42,7 +42,12 @@ fun MainScreen(
         topBar = {
             TopAppBar(
                 backgroundColor = bgColor,
-                contentPadding = PaddingValues(top = 10.dp, start = 25.dp, end = 25.dp, bottom = 30.dp),
+                contentPadding = PaddingValues(
+                    top = 10.dp,
+                    start = 25.dp,
+                    end = 25.dp,
+                    bottom = 30.dp
+                ),
                 elevation = 0.dp
             ) {
                 ConstraintLayout(
@@ -71,7 +76,10 @@ fun MainScreen(
                     )
                     if (currentDestination.value == Screen.Profile.route) {
                         TextButton(
-                            onClick = { navController.navigate(Screen.Login.route) },
+                            onClick = {
+                                navController.navigate(Screen.Login.route)
+                                navController.enableOnBackPressed(false)
+                            },
                             modifier = Modifier.constrainAs(profilePic) {
                                 end.linkTo(parent.end)
                                 top.linkTo(parent.top)
@@ -113,21 +121,18 @@ fun MainScreen(
                         selected = false,
                         onClick = {
                             mainNavController.navigate(screen.route)
-                            if (mainNavController.currentDestination?.route != Screen.Profile.route)
-                                currentDestination.value = mainNavController.currentDestination?.route
-                            else {
-                                currentDestination.value = mainNavController.currentDestination?.route
-                            }
+                            currentDestination.value =
+                                mainNavController.currentDestination?.route
                         },
                         icon = {
                             screen.icon?.let { painterResource(id = it) }?.let {
-                                if(currentDestination.value == screen.route){
+                                if (currentDestination.value == screen.route) {
                                     Icon(
                                         painter = it,
                                         contentDescription = null,
                                         tint = Color.White
                                     )
-                                }else{
+                                } else {
                                     Icon(
                                         painter = it,
                                         contentDescription = null,
@@ -146,9 +151,21 @@ fun MainScreen(
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(bottom = it.calculateBottomPadding())
         ) {
-            composable(Screen.Home.route) { HomeScreen(listFeelings, listQuotes) }
-            composable(Screen.Sound.route) { SoundScreen() }
-            composable(Screen.Profile.route) { ProfileScreen() }
+            composable(Screen.Home.route) {
+                HomeScreen(listFeelings, listQuotes)
+                currentDestination.value =
+                    mainNavController.currentDestination?.route
+            }
+            composable(Screen.Sound.route) {
+                SoundScreen()
+                currentDestination.value =
+                    mainNavController.currentDestination?.route
+            }
+            composable(Screen.Profile.route) {
+                ProfileScreen()
+                currentDestination.value =
+                    mainNavController.currentDestination?.route
+            }
         }
     }
 }

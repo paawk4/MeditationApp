@@ -31,7 +31,7 @@ sealed class Screen(val route: String, val icon: Int?) {
 fun MeditationNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = "start",
+    startDestination: String = "main",
     retrofitApi: RetrofitApi,
     listFeelings: List<FeelingsListItem>,
     listQuotes: List<QuoteListItem>
