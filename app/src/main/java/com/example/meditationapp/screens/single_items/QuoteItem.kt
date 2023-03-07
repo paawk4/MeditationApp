@@ -1,4 +1,4 @@
-package com.example.meditationapp.ui.screens.single_items
+package com.example.meditationapp.screens.single_items
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

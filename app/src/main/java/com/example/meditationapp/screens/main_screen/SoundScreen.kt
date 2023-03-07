@@ -1,4 +1,4 @@
-package com.example.meditationapp.ui.screens.main_screen
+package com.example.meditationapp.screens.main_screen
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

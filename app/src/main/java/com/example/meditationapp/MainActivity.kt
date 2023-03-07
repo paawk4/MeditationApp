@@ -11,7 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import com.example.meditationapp.navigation.MeditationNavHost
 import com.example.meditationapp.remote.RetrofitApi
-import com.example.meditationapp.ui.screens.APP_ACTIVITY
+import com.example.meditationapp.screens.APP_ACTIVITY
 import com.example.meditationapp.ui.theme.MeditationAppTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,35 +28,23 @@ class MainActivity : ComponentActivity() {
         APP_ACTIVITY = this
         retrofitApi = RetrofitApi.create()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val listFeelings = retrofitApi.getFeelings().data
-                val listQuotes = retrofitApi.getQuotes().data
-                runOnUiThread {
-                    setContent {
-                        MeditationAppTheme {
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colors.background
-                            ) {
-                                MeditationNavHost(
-                                    listFeelings = listFeelings,
-                                    listQuotes = listQuotes,
-                                    retrofitApi = retrofitApi
-                                )
-                            }
-                        }
-                    }
-                }
 
-            } catch (e: Exception) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val listFeelings = retrofitApi.getFeelings().data
+            val listQuotes = retrofitApi.getQuotes().data
+            runOnUiThread {
                 setContent {
                     MeditationAppTheme {
                         Surface(
                             modifier = Modifier.fillMaxSize(),
                             color = MaterialTheme.colors.background
                         ) {
-                            Text("Упс... Нет интернета")
+                            MeditationNavHost(
+                                listFeelings = listFeelings,
+                                listQuotes = listQuotes,
+                                retrofitApi = retrofitApi
+                            )
                         }
                     }
                 }

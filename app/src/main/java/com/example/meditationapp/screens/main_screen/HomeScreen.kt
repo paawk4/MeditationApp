@@ -1,4 +1,4 @@
-package com.example.meditationapp.ui.screens.main_screen
+package com.example.meditationapp.screens.main_screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,8 +18,8 @@ import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuoteListItem
 import com.example.meditationapp.models.user
-import com.example.meditationapp.ui.screens.single_items.FeelingsItem
-import com.example.meditationapp.ui.screens.single_items.QuoteItem
+import com.example.meditationapp.screens.single_items.FeelingsItem
+import com.example.meditationapp.screens.single_items.QuoteItem
 
 @Composable
 fun HomeScreen(

@@ -1,4 +1,4 @@
-package com.example.meditationapp.ui.screens
+package com.example.meditationapp.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

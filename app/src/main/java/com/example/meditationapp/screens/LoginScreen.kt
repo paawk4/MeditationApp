@@ -1,4 +1,4 @@
-package com.example.meditationapp.ui.screens
+package com.example.meditationapp.screens
 
 import android.annotation.SuppressLint
 import android.text.method.PasswordTransformationMethod
@@ -27,7 +27,7 @@ import com.example.meditationapp.models.NotAuthUser
 import com.example.meditationapp.models.UserModel
 import com.example.meditationapp.models.user
 import com.example.meditationapp.remote.RetrofitApi
-import com.example.meditationapp.ui.screens.main_screen.MainScreen
+import com.example.meditationapp.screens.main_screen.MainScreen
 import com.example.meditationapp.ui.theme.bgColor
 import io.reactivex.Observable
 import io.reactivex.Single
