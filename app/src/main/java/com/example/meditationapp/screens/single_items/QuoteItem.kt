@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.meditationapp.R
-import com.example.meditationapp.models.QuoteListItem
+import com.example.meditationapp.models.QuotesListItem
 import com.example.meditationapp.ui.theme.bgColor
 
 @Composable
-fun QuoteItem(item: QuoteListItem) {
+fun QuoteItem(item: QuotesListItem) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

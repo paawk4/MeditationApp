@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
-import com.example.meditationapp.models.QuoteListItem
+import com.example.meditationapp.models.QuotesListItem
 import com.example.meditationapp.models.user
 import com.example.meditationapp.screens.single_items.FeelingsItem
 import com.example.meditationapp.screens.single_items.QuoteItem
@@ -24,7 +24,7 @@ import com.example.meditationapp.screens.single_items.QuoteItem
 @Composable
 fun HomeScreen(
     listFeelings: List<FeelingsListItem>,
-    listQuotes: List<QuoteListItem>
+    listQuotes: List<QuotesListItem>
 ) {
     LazyColumn(
         modifier = Modifier

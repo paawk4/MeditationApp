@@ -17,10 +17,10 @@ import retrofit2.http.POST
 
 interface RetrofitApi {
     @GET("feelings")
-    suspend fun getFeelings(): FeelingsListResponse
+    fun getFeelings(): Observable<FeelingsListResponse>
 
     @GET("quotes")
-    suspend fun getQuotes(): QuotesListResponse
+    fun getQuotes(): Observable<QuotesListResponse>
 
     @Headers("Content-Type: application/json")
     @POST("user/login")

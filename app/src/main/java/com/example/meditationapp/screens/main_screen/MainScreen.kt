@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,7 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
-import com.example.meditationapp.models.QuoteListItem
+import com.example.meditationapp.models.QuotesListItem
 import com.example.meditationapp.models.user
 import com.example.meditationapp.navigation.Screen
 import com.example.meditationapp.ui.theme.bgColor
@@ -33,7 +32,7 @@ import com.example.meditationapp.ui.theme.bgColor
 fun MainScreen(
     navController: NavHostController,
     listFeelings: List<FeelingsListItem>,
-    listQuotes: List<QuoteListItem>
+    listQuotes: List<QuotesListItem>
 ) {
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
     val mainNavController = rememberNavController()

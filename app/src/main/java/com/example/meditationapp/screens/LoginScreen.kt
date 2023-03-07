@@ -1,7 +1,6 @@
 package com.example.meditationapp.screens
 
 import android.annotation.SuppressLint
-import android.text.method.PasswordTransformationMethod
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,26 +19,24 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavHostController
 import com.example.meditationapp.R
 import com.example.meditationapp.models.NotAuthUser
-import com.example.meditationapp.models.UserModel
 import com.example.meditationapp.models.user
 import com.example.meditationapp.remote.RetrofitApi
-import com.example.meditationapp.screens.main_screen.MainScreen
 import com.example.meditationapp.ui.theme.bgColor
-import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
-import okhttp3.internal.wait
-
 
 
 @Composable
-fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {
+fun LoginScreen(
+    navController: NavHostController,
+    retrofitApi: RetrofitApi,
+    compositeDisposable: CompositeDisposable
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -101,12 +98,13 @@ fun LoginScreen(navController: NavHostController, retrofitApi: RetrofitApi) {
             keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    login(login, password, navController, retrofitApi)
+                    login(login, password, navController, retrofitApi, compositeDisposable)
                 }
             )
         )
         Button(
-            onClick = { login(login, password, navController, retrofitApi) }, modifier = Modifier
+            onClick = { login(login, password, navController, retrofitApi, compositeDisposable) },
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 60.dp)
         ) {
@@ -128,7 +126,8 @@ fun login(
     login: String,
     password: String,
     navController: NavHostController,
-    retrofitApi: RetrofitApi
+    retrofitApi: RetrofitApi,
+    compositeDisposable: CompositeDisposable
 ) {
     if (login.isNotBlank() && password.isNotBlank()) {
         var isEmailTrue = false
@@ -137,8 +136,8 @@ fun login(
                 isEmailTrue = true
             }
         }
-        if (isEmailTrue){
-            retrofitApi.loginUser(NotAuthUser(login, password))
+        if (isEmailTrue) {
+            compositeDisposable.add(retrofitApi.loginUser(NotAuthUser(login, password))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
@@ -153,6 +152,7 @@ fun login(
                         Toast.LENGTH_SHORT
                     ).show()
                 })
+            )
         }
     }
 }

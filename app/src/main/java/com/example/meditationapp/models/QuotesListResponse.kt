@@ -1,7 +1,7 @@
 package com.example.meditationapp.models
 
-data class QuotesListResponse(val data: List<QuoteListItem>)
-data class QuoteListItem(
+data class QuotesListResponse(val data: List<QuotesListItem>)
+data class QuotesListItem(
     val id: Int,
     val title: String,
     val image: String,
