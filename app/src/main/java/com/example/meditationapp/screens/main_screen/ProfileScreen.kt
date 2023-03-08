@@ -17,20 +17,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.meditationapp.R
-import com.example.meditationapp.models.user
+import com.example.meditationapp.models.currentUser
 
 @Composable
 fun ProfileScreen() {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Card(shape = RoundedCornerShape(150.dp)) {
             AsyncImage(
-                model = user.avatar,
+                model = currentUser.avatar,
                 contentDescription = null,
                 modifier = Modifier.size(150.dp)
             )
         }
         Text(
-            text = user.nickname,
+            text = currentUser.nickname,
             fontFamily = FontFamily(Font(R.font.alegreya_medium)),
             fontSize = 35.sp,
             modifier = Modifier.padding(top = 8.dp)

@@ -22,8 +22,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.meditationapp.R
 import com.example.meditationapp.models.NotAuthUser
-import com.example.meditationapp.models.user
+import com.example.meditationapp.models.UserModel
+import com.example.meditationapp.models.currentUser
 import com.example.meditationapp.remote.RetrofitApi
+import com.example.meditationapp.room.dao.UserDao
+import com.example.meditationapp.room.entities.UserEntity
 import com.example.meditationapp.ui.theme.bgColor
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -35,7 +38,8 @@ import kotlinx.coroutines.*
 fun LoginScreen(
     navController: NavHostController,
     retrofitApi: RetrofitApi,
-    compositeDisposable: CompositeDisposable
+    compositeDisposable: CompositeDisposable,
+    userDao: UserDao
 ) {
     Column(
         Modifier
@@ -98,12 +102,12 @@ fun LoginScreen(
             keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    login(login, password, navController, retrofitApi, compositeDisposable)
+                    login(login, password, navController, retrofitApi, compositeDisposable, userDao)
                 }
             )
         )
         Button(
-            onClick = { login(login, password, navController, retrofitApi, compositeDisposable) },
+            onClick = { login(login, password, navController, retrofitApi, compositeDisposable, userDao) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 60.dp)
@@ -127,7 +131,8 @@ fun login(
     password: String,
     navController: NavHostController,
     retrofitApi: RetrofitApi,
-    compositeDisposable: CompositeDisposable
+    compositeDisposable: CompositeDisposable,
+    userDao: UserDao
 ) {
     if (login.isNotBlank() && password.isNotBlank()) {
         var isEmailTrue = false
@@ -141,7 +146,16 @@ fun login(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
-                    user = result
+                    var user = UserEntity(
+                        id = result.id,
+                        email = result.email,
+                        nickname = result.nickname,
+                        avatar = result.avatar,
+                        token = result.token
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        userDao.insertUser(user)
+                    }
                     navController.navigate("main")
                     navController.enableOnBackPressed(false)
                 }, { error ->

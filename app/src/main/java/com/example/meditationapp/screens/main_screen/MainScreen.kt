@@ -1,5 +1,6 @@
 package com.example.meditationapp.screens.main_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,19 +25,42 @@ import coil.compose.AsyncImage
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuotesListItem
-import com.example.meditationapp.models.user
+import com.example.meditationapp.models.UserModel
+import com.example.meditationapp.models.currentUser
 import com.example.meditationapp.navigation.Screen
+import com.example.meditationapp.room.dao.UserDao
+import com.example.meditationapp.room.entities.UserEntity
 import com.example.meditationapp.ui.theme.bgColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MainScreen(
     navController: NavHostController,
     listFeelings: List<FeelingsListItem>,
-    listQuotes: List<QuotesListItem>
+    listQuotes: List<QuotesListItem>,
+    userDao: UserDao
 ) {
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
     val mainNavController = rememberNavController()
     val currentDestination = remember { mutableStateOf(Screen.Home?.route) }
+
+    CoroutineScope(Dispatchers.IO).launch {
+        val user = userDao.getUser()
+        if (user != null) {
+            currentUser = UserModel(
+                id = user.id,
+                email = user.email,
+                nickname = user.nickname,
+                avatar = user.avatar,
+                token = user.token
+            )
+        }
+    }
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,6 +100,16 @@ fun MainScreen(
                     if (currentDestination.value == Screen.Profile.route) {
                         TextButton(
                             onClick = {
+                                val user = UserEntity(
+                                    id = currentUser.id,
+                                    email = currentUser.email,
+                                    nickname = currentUser.nickname,
+                                    avatar = currentUser.avatar,
+                                    token = currentUser.token
+                                )
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    userDao.deleteUser(user)
+                                }
                                 navController.navigate(Screen.Login.route)
                                 navController.enableOnBackPressed(false)
                             },
@@ -102,7 +136,7 @@ fun MainScreen(
                             }) {
                             Card(shape = RoundedCornerShape(25.dp)) {
                                 AsyncImage(
-                                    model = user.avatar,
+                                    model = currentUser.avatar,
                                     contentDescription = null,
                                     modifier = Modifier.size(45.dp)
                                 )

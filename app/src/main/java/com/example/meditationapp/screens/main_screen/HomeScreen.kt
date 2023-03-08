@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuotesListItem
-import com.example.meditationapp.models.user
+import com.example.meditationapp.models.currentUser
 import com.example.meditationapp.screens.single_items.FeelingsItem
 import com.example.meditationapp.screens.single_items.QuoteItem
 
@@ -33,7 +33,7 @@ fun HomeScreen(
     ) {
         item {
             Text(
-                text = "С возвращением, ${user.nickname}!",
+                text = "С возвращением, ${currentUser.nickname}!",
                 fontFamily = FontFamily(Font(R.font.alegreya_medium)),
                 fontSize = 34.sp,
                 lineHeight = 40.sp
@@ -45,7 +45,7 @@ fun HomeScreen(
                 lineHeight = 26.sp,
                 modifier = Modifier.alpha(0.7f)
             )
-
+            listFeelings.sortedBy { it.position }
             LazyRow(modifier = Modifier.padding(top = 25.dp)) {
                 items(listFeelings) {
                     FeelingsItem(item = it)
