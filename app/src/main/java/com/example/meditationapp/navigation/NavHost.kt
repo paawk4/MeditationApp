@@ -11,7 +11,8 @@ import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuotesListItem
 import com.example.meditationapp.remote.RetrofitApi
 import com.example.meditationapp.screens.LoginScreen
-import com.example.meditationapp.screens.OnBoardingScreen
+import com.example.meditationapp.screens.SplashScreen
+import com.example.meditationapp.screens.StartScreen
 import com.example.meditationapp.screens.main_screen.MainScreen
 import io.reactivex.disposables.CompositeDisposable
 
@@ -30,7 +31,7 @@ fun MeditationNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable(Screen.Start.route) { OnBoardingScreen(navController) }
+        composable(Screen.Start.route) { StartScreen(navController) }
         composable(Screen.Login.route) { LoginScreen(navController, retrofitApi, compositeDisposable) }
         composable(Screen.Register.route) { Text(text = "Регистрация") }
         composable(Screen.Main.route) { MainScreen(navController, listFeelings, listQuotes) }
