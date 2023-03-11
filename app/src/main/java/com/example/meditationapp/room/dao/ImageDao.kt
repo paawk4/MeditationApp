@@ -6,6 +6,7 @@ import com.example.meditationapp.room.entities.ImageEntity
 
 @Dao
 interface ImageDao {
+    @Transaction
     @Query("SELECT * FROM images")
     fun getAll(): List<ImageEntity>
     @Insert(onConflict = OnConflictStrategy.REPLACE)

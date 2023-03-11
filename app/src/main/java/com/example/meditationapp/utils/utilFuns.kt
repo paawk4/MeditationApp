@@ -13,8 +13,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 fun bitmapToString(bitmap: Bitmap?): String {
+    var resized = bitmap
+    if (bitmap?.byteCount!! > 500000) {
+        resized = Bitmap.createScaledBitmap(
+            bitmap,
+            (bitmap.width * 0.2).toInt(),
+            (bitmap.height * 0.2).toInt(),
+            true
+        )
+    }
     val baos = ByteArrayOutputStream()
-    bitmap?.compress(Bitmap.CompressFormat.PNG, 100, baos)
+    resized?.compress(Bitmap.CompressFormat.PNG, 100, baos)
     val b = baos.toByteArray()
     return Base64.encodeToString(b, Base64.DEFAULT)
 }
