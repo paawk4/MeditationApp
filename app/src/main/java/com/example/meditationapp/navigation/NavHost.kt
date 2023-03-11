@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.meditationapp.models.FeelingsListItem
 import com.example.meditationapp.models.QuotesListItem
 import com.example.meditationapp.remote.RetrofitApi
+import com.example.meditationapp.room.dao.ImageDao
 import com.example.meditationapp.room.dao.UserDao
 import com.example.meditationapp.screens.LoginScreen
 import com.example.meditationapp.screens.StartScreen
@@ -25,7 +26,8 @@ fun MeditationNavHost(
     listFeelings: List<FeelingsListItem>,
     listQuotes: List<QuotesListItem>,
     compositeDisposable: CompositeDisposable,
-    userDao: UserDao
+    userDao: UserDao,
+    imageDao: ImageDao
 ) {
     NavHost(
         modifier = modifier,
@@ -34,6 +36,7 @@ fun MeditationNavHost(
     ) {
         composable(Screen.Start.route) { StartScreen(navController) }
         composable(Screen.Login.route) {
+            navController.enableOnBackPressed(false)
             LoginScreen(
                 navController,
                 retrofitApi,
@@ -41,7 +44,18 @@ fun MeditationNavHost(
                 userDao
             )
         }
-        composable(Screen.Register.route) { Text(text = "Регистрация") }
-        composable(Screen.Main.route) { MainScreen(navController, listFeelings, listQuotes, userDao) }
+        composable(Screen.Register.route) {
+            Text(text = "Регистрация")
+            navController.enableOnBackPressed(true)
+        }
+        composable(Screen.Main.route) {
+            MainScreen(
+                navController,
+                listFeelings,
+                listQuotes,
+                userDao,
+                imageDao
+            )
+        }
     }
 }

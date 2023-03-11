@@ -28,8 +28,10 @@ import com.example.meditationapp.models.QuotesListItem
 import com.example.meditationapp.models.UserModel
 import com.example.meditationapp.models.currentUser
 import com.example.meditationapp.navigation.Screen
+import com.example.meditationapp.room.dao.ImageDao
 import com.example.meditationapp.room.dao.UserDao
 import com.example.meditationapp.room.entities.UserEntity
+import com.example.meditationapp.screens.ImageScreen
 import com.example.meditationapp.ui.theme.bgColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +43,8 @@ fun MainScreen(
     navController: NavHostController,
     listFeelings: List<FeelingsListItem>,
     listQuotes: List<QuotesListItem>,
-    userDao: UserDao
+    userDao: UserDao,
+    imageDao: ImageDao
 ) {
     val bottomItems = listOf(Screen.Home, Screen.Sound, Screen.Profile)
     val mainNavController = rememberNavController()
@@ -59,7 +62,6 @@ fun MainScreen(
             )
         }
     }
-
 
     Scaffold(
         topBar = {
@@ -100,18 +102,18 @@ fun MainScreen(
                     if (currentDestination.value == Screen.Profile.route) {
                         TextButton(
                             onClick = {
-                                val user = UserEntity(
-                                    id = currentUser.id,
-                                    email = currentUser.email,
-                                    nickname = currentUser.nickname,
-                                    avatar = currentUser.avatar,
-                                    token = currentUser.token
-                                )
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    userDao.deleteUser(user)
+                                    userDao.deleteUser(
+                                        UserEntity(
+                                            id = currentUser.id,
+                                            email = currentUser.email,
+                                            nickname = currentUser.nickname,
+                                            avatar = currentUser.avatar,
+                                            token = currentUser.token
+                                        )
+                                    )
                                 }
                                 navController.navigate(Screen.Login.route)
-                                navController.enableOnBackPressed(false)
                             },
                             modifier = Modifier.constrainAs(profilePic) {
                                 end.linkTo(parent.end)
@@ -195,7 +197,7 @@ fun MainScreen(
                     mainNavController.currentDestination?.route
             }
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(imageDao)
                 currentDestination.value =
                     mainNavController.currentDestination?.route
             }

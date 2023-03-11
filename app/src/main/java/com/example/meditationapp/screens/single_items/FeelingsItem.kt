@@ -1,6 +1,7 @@
 package com.example.meditationapp.screens.single_items
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,7 +26,8 @@ fun FeelingsItem(item: FeelingsListItem) {
         modifier = Modifier.padding(end = 20.dp)
     ) {
         Card(
-            modifier = Modifier.size(85.dp),
+            modifier = Modifier
+                .size(85.dp),
             backgroundColor = Color.White,
             shape = RoundedCornerShape(20.dp)
         ) {

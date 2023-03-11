@@ -44,83 +44,114 @@ fun LoginScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(start = 25.dp, end = 25.dp, top = 100.dp)
+            .padding(start = 25.dp, end = 25.dp)
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = null,
-            tint = Color.White,
-            modifier = Modifier.size(50.dp)
-        )
-        Text(
-            text = "Sign in",
-            fontFamily = FontFamily(Font(R.font.alegreya_medium)),
-            fontSize = 34.sp,
-            modifier = Modifier.padding(top = 30.dp)
-        )
-        var login by remember {
-            mutableStateOf("")
-        }
-        var password by remember {
-            mutableStateOf("")
-        }
-        val focusManager = LocalFocusManager.current
-        TextField(
-            value = login,
-            onValueChange = { login = it },
-            label = { Text(text = "Email") },
-            modifier = Modifier
-                .padding(top = 100.dp)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = bgColor,
-                unfocusedIndicatorColor = Color.White
-            ),
-            singleLine = true,
-            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
-            keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Down)
-                }
-            ))
-
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(text = "Пароль") },
-            modifier = Modifier
-                .padding(top = 30.dp)
-                .fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = bgColor,
-                unfocusedIndicatorColor = Color.White
-            ),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
-            keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    login(login, password, navController, retrofitApi, compositeDisposable, userDao)
-                }
+        Column(
+            Modifier
+                .fillMaxWidth().defaultMinSize(minHeight = 250.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(50.dp)
             )
-        )
-        Button(
-            onClick = { login(login, password, navController, retrofitApi, compositeDisposable, userDao) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 60.dp)
-        ) {
-            Text(text = "Sign in")
+            Text(
+                text = "Sign in",
+                fontFamily = FontFamily(Font(R.font.alegreya_medium)),
+                fontSize = 34.sp,
+                modifier = Modifier.padding(top = 30.dp)
+            )
         }
-        TextButton(
-            onClick = { navController.navigate("register") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 60.dp)
+
+        Column(
+            Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Register")
+            var login by remember {
+                mutableStateOf(currentUser.email)
+            }
+            var password by remember {
+                mutableStateOf("")
+            }
+            val focusManager = LocalFocusManager.current
+            TextField(
+                value = login,
+                onValueChange = { login = it },
+                label = { Text(text = "Email") },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = bgColor,
+                    unfocusedIndicatorColor = Color.White
+                ),
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
+                keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ))
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(text = "Пароль") },
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = bgColor,
+                    unfocusedIndicatorColor = Color.White
+                ),
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
+                keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        login(
+                            login,
+                            password,
+                            navController,
+                            retrofitApi,
+                            compositeDisposable,
+                            userDao
+                        )
+                    }
+                )
+            )
+            Button(
+                onClick = {
+                    login(
+                        login,
+                        password,
+                        navController,
+                        retrofitApi,
+                        compositeDisposable,
+                        userDao
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 60.dp)
+            ) {
+                Text(text = "Sign in")
+            }
+            TextButton(
+                onClick = {
+                    navController.navigate("register")
+
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 60.dp)
+            ) {
+                Text(text = "Register")
+            }
         }
     }
 }
@@ -142,30 +173,32 @@ fun login(
             }
         }
         if (isEmailTrue) {
-            compositeDisposable.add(retrofitApi.loginUser(NotAuthUser(login, password))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({ result ->
-                    var user = UserEntity(
-                        id = result.id,
-                        email = result.email,
-                        nickname = result.nickname,
-                        avatar = result.avatar,
-                        token = result.token
-                    )
-                    CoroutineScope(Dispatchers.IO).launch {
-                        userDao.insertUser(user)
-                    }
-                    navController.navigate("main")
-                    navController.enableOnBackPressed(false)
-                }, { error ->
-                    error.printStackTrace()
-                    Toast.makeText(
-                        APP_ACTIVITY,
-                        "Введен неверный логин или пароль",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
+            compositeDisposable.add(
+                retrofitApi.loginUser(NotAuthUser(login, password))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({ result ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            userDao.insertUser(
+                                UserEntity(
+                                    id = result.id,
+                                    email = result.email,
+                                    nickname = result.nickname,
+                                    avatar = result.avatar,
+                                    token = result.token
+                                )
+                            )
+                        }
+                        navController.navigate("main")
+                        navController.enableOnBackPressed(false)
+                    }, { error ->
+                        error.printStackTrace()
+                        Toast.makeText(
+                            APP_ACTIVITY,
+                            "Введен неверный логин или пароль",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
             )
         }
     }

@@ -12,4 +12,6 @@ sealed class Screen(val route: String, val icon: Int) {
     object Login : Screen("login", -1)
     object Register : Screen("register", -1)
     object Main : Screen("main", -1)
+
+    object Image : Screen("image", -1)
 }

@@ -23,6 +23,7 @@ import com.example.meditationapp.ui.theme.MeditationAppTheme
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         APP_ACTIVITY = this
         myCompositeDisposable = CompositeDisposable()
         retrofitApi = RetrofitApi.create()
@@ -47,6 +49,7 @@ class MainActivity : ComponentActivity() {
         val feelingsDao = db.feelingsDao()
         val quotesDao = db.quotesDao()
         val userDao = db.userDao()
+        val imageDao = db.imageDao()
 
         setContent {
             SplashScreen()
@@ -54,7 +57,8 @@ class MainActivity : ComponentActivity() {
                 try {
                     listFeelings = retrofitApi.getFeelings().data
                     listQuotes = retrofitApi.getQuotes().data
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
                 if (listFeelings.isNotEmpty() && listQuotes.isNotEmpty()) {
                     feelingsDao.insertAll(listFeelings.map {
@@ -92,11 +96,11 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                val user = userDao.getUser()
                 var startDestination = Screen.Start.route
-                if (user?.token != null){
+                if (userDao.getUser()?.token != null){
                     startDestination = Screen.Main.route
                 }
+                delay(2000)
                 runOnUiThread {
                     setContent {
                         MeditationAppTheme {
@@ -110,7 +114,8 @@ class MainActivity : ComponentActivity() {
                                     listQuotes = listQuotes,
                                     compositeDisposable = myCompositeDisposable,
                                     userDao = userDao,
-                                    startDestination = startDestination
+                                    startDestination = startDestination,
+                                    imageDao = imageDao
                                 )
                             }
                         }
