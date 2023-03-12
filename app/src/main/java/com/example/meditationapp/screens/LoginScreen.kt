@@ -16,6 +16,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +50,8 @@ fun LoginScreen(
     ) {
         Column(
             Modifier
-                .fillMaxWidth().defaultMinSize(minHeight = 250.dp),
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 250.dp),
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
@@ -89,7 +92,11 @@ fun LoginScreen(
                 ),
                 singleLine = true,
                 textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
-                keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    autoCorrect = false,
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                ),
                 keyboardActions = KeyboardActions(
                     onNext = {
                         focusManager.moveFocus(FocusDirection.Down)
@@ -110,7 +117,11 @@ fun LoginScreen(
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 textStyle = TextStyle(fontSize = 18.sp, color = Color.White),
-                keyboardOptions = KeyboardOptions(autoCorrect = false, imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    autoCorrect = false,
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
                 keyboardActions = KeyboardActions(
                     onDone = {
                         login(
