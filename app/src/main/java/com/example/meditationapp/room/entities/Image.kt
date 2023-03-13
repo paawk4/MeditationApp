@@ -1,10 +1,11 @@
 package com.example.meditationapp.room.entities
 
-import android.graphics.Bitmap
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.intellij.lang.annotations.JdkConstants.CursorType
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "images")
 data class ImageEntity(
     @PrimaryKey(autoGenerate = true)
@@ -12,4 +13,4 @@ data class ImageEntity(
     val image: String,
     val position: Int,
     val time: String
-)
+) : Parcelable

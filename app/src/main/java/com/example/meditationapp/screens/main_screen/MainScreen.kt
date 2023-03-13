@@ -18,9 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import coil.compose.AsyncImage
 import com.example.meditationapp.R
 import com.example.meditationapp.models.FeelingsListItem
@@ -180,11 +182,11 @@ fun MainScreen(
                 }
             }
         }
-    ) {
+    ) { paddingValues ->
         NavHost(
             navController = mainNavController,
             startDestination = Screen.Home.route,
-            modifier = Modifier.padding(bottom = it.calculateBottomPadding())
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
         ) {
             composable(Screen.Home.route) {
                 HomeScreen(listFeelings, listQuotes)
@@ -197,9 +199,21 @@ fun MainScreen(
                     mainNavController.currentDestination?.route
             }
             composable(Screen.Profile.route) {
-                ProfileScreen(imageDao)
+                ProfileScreen(imageDao, mainNavController)
                 currentDestination.value =
                     mainNavController.currentDestination?.route
+            }
+            composable(
+                "${Screen.Image.route}/{imageId}",
+                arguments = listOf(navArgument("imageId") {
+                    type = NavType.IntType
+                })
+            ) { backStackEntry ->
+                ImageScreen(
+                    imageItemId = backStackEntry.arguments?.getInt("imageId"),
+                    imageDao = imageDao,
+                    navController = mainNavController
+                )
             }
         }
     }

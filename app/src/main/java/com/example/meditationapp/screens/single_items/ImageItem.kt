@@ -22,15 +22,10 @@ import com.example.meditationapp.screens.ImageScreen
 import com.example.meditationapp.utils.stringToBitmap
 
 @Composable
-fun ImageItem(imageItem: ImageEntity, imageDao: ImageDao) {
-    Card(shape = RoundedCornerShape(20.dp), modifier = Modifier
+fun ImageItem(imageItem: ImageEntity, modifier: Modifier) {
+    Card(shape = RoundedCornerShape(20.dp), modifier = modifier
         .width(150.dp)
-        .height(120.dp)
-        .clickable {
-//            APP_ACTIVITY.setContent {
-//                ImageScreen(imageItem = imageItem, imageDao = imageDao)
-//            }
-        }) {
+        .height(120.dp)) {
         Image(
             bitmap = stringToBitmap(imageItem.image).asImageBitmap(),
             contentDescription = null,
