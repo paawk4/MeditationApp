@@ -2,29 +2,35 @@ package com.example.meditationapp.screens
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import com.example.meditationapp.R
 import com.example.meditationapp.room.dao.ImageDao
 import com.example.meditationapp.room.entities.ImageEntity
+import com.example.meditationapp.ui.theme.bgColor
+import com.example.meditationapp.utils.deleteImageById
 import com.example.meditationapp.utils.stringToBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.saket.swipe.SwipeAction
+import me.saket.swipe.SwipeableActionsBox
+
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -59,13 +65,7 @@ fun ImageScreen(imageItemId: Int?, imageDao: ImageDao, navController: NavControl
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             image.value?.let {
-                ZoomableImage(stringToBitmap(it.image))
-//                Image(
-//                    bitmap = stringToBitmap(it.image).asImageBitmap(),
-//                    contentDescription = null,
-//                    modifier = Modifier.fillMaxSize(),
-//                    contentScale = ContentScale.FillWidth
-//                )
+                CustomImage(it.id, stringToBitmap(it.image), imageDao, navController)
             }
         }
         Row(
@@ -79,9 +79,7 @@ fun ImageScreen(imageItemId: Int?, imageDao: ImageDao, navController: NavControl
         ) {
             TextButton(onClick = {
                 imageItemId?.let {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        imageDao.deleteImageById(it)
-                    }
+                    deleteImageById(it, imageDao)
                     navController.popBackStack()
                 }
             }) {
@@ -102,43 +100,34 @@ fun ImageScreen(imageItemId: Int?, imageDao: ImageDao, navController: NavControl
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ZoomableImage(image: Bitmap) {
-    var scale by remember { mutableStateOf(1f) }
-    var offsetX by remember { mutableStateOf(0f) }
-    var offsetY by remember { mutableStateOf(0f) }
-    Box(
+fun CustomImage(imageId: Int, image: Bitmap, imageDao: ImageDao, navController: NavController) {
+    val delete = SwipeAction(
+        icon = rememberVectorPainter(ImageVector.vectorResource(id = R.drawable.ic_delete)),
+        background = bgColor,
+        isUndo = true,
+        onSwipe = {
+            deleteImageById(imageId, imageDao)
+            navController.popBackStack()
+        }
+    )
+
+    val back = SwipeAction(
+        icon = rememberVectorPainter(ImageVector.vectorResource(id = R.drawable.ic_back)),
+        background = bgColor,
+        isUndo = true,
+        onSwipe = { navController.popBackStack() },
+    )
+
+    ZoomableImage(
         modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                forEachGesture {
-                    awaitPointerEventScope {
-                        awaitFirstDown()
-                        do {
-                            val event = awaitPointerEvent()
-                            scale *= event.calculateZoom()
-                            val offset = event.calculatePan()
-                            offsetX += offset.x
-                            offsetY += offset.y
-                        } while (event.changes.any { it.pressed })
-                    }
-                }
-            }
-    ) {
-        Image(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offsetX,
-                    translationY = offsetY
-                )
-                .fillMaxSize(),
-            contentDescription = null,
-            bitmap = image.asImageBitmap(),
-            contentScale = ContentScale.FillWidth
-        )
-    }
+            .fillMaxSize(),
+        isRotation = false,
+        bitmap = image,
+        back = back,
+        delete = delete
+    )
 }
+
 

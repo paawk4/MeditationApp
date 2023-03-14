@@ -43,7 +43,7 @@ fun FeelingsItem(item: FeelingsListItem) {
         Text(
             text = item.title,
             fontWeight = FontWeight.Normal,
-            fontSize = 13.sp,
+            fontSize = 14.sp,
             lineHeight = 15.sp,
             modifier = Modifier.padding(top = 5.dp),
             textAlign = TextAlign.Center

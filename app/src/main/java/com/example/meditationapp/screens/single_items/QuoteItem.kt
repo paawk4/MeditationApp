@@ -38,14 +38,14 @@ fun QuoteItem(item: QuotesListItem) {
                     text = item.title,
                     color = bgColor,
                     fontFamily = FontFamily(Font(R.font.alegreya_medium)),
-                    fontSize = 29.sp
+                    fontSize = 28.sp
                 )
                 Text(
                     text = item.description,
                     color = Color.Black,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 19.sp,
-                    modifier = Modifier.requiredWidth(200.dp),
+                    fontSize = 18.sp,
+                    modifier = Modifier.requiredWidth(195.dp),
                     lineHeight = 18.sp
                 )
                 Button(
@@ -59,10 +59,10 @@ fun QuoteItem(item: QuotesListItem) {
                         fontSize = 19.sp,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(
-                            start = 25.dp,
-                            end = 25.dp,
-                            top = 3.dp,
-                            bottom = 3.dp
+                            start = 20.dp,
+                            end = 20.dp,
+                            top = 2.dp,
+                            bottom = 2.dp
                         )
                     )
                 }

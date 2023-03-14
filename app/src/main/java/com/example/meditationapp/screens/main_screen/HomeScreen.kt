@@ -1,6 +1,5 @@
 package com.example.meditationapp.screens.main_screen
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,13 +35,13 @@ fun HomeScreen(
             Text(
                 text = "С возвращением, ${currentUser.nickname}!",
                 fontFamily = FontFamily(Font(R.font.alegreya_medium)),
-                fontSize = 34.sp,
+                fontSize = 32.sp,
                 lineHeight = 40.sp
             )
             Text(
                 text = "Каким ты себя ощущаешь сегодня?",
                 fontWeight = FontWeight.Medium,
-                fontSize = 24.sp,
+                fontSize = 22.sp,
                 lineHeight = 26.sp,
                 modifier = Modifier.alpha(0.7f)
             )

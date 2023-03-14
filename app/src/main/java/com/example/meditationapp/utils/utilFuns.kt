@@ -7,7 +7,11 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
+import com.example.meditationapp.room.dao.ImageDao
 import com.example.meditationapp.screens.APP_ACTIVITY
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,4 +51,10 @@ fun calculateCurrentTime(): String {
     val currentDate = Date()
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     return timeFormat.format(currentDate)
+}
+
+fun deleteImageById(id: Int, imageDao: ImageDao){
+    CoroutineScope(Dispatchers.IO).launch {
+        imageDao.deleteImageById(id)
+    }
 }
