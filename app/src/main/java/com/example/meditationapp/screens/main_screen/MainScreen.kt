@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -153,31 +155,26 @@ fun MainScreen(
         },
         bottomBar = {
             BottomNavigation(backgroundColor = bgColor) {
-                bottomItems.forEach { screen ->
+                var selectedItemPos by remember {
+                    mutableStateOf(0)
+                }
+                bottomItems.forEachIndexed { index, screen ->
                     BottomNavigationItem(
-                        selected = false,
+                        selected = selectedItemPos == index,
                         onClick = {
+                            selectedItemPos = index
                             mainNavController.navigate(screen.route)
                             currentDestination.value =
                                 mainNavController.currentDestination?.route
                         },
                         icon = {
-                            screen.icon?.let { painterResource(id = it) }?.let {
-                                if (currentDestination.value == screen.route) {
-                                    Icon(
-                                        painter = it,
-                                        contentDescription = null,
-                                        tint = Color.White
-                                    )
-                                } else {
-                                    Icon(
-                                        painter = it,
-                                        contentDescription = null,
-                                        tint = Color(0xFF959697)
-                                    )
-                                }
-                            }
-                        }
+                            Icon(
+                                painter = painterResource(id = screen.icon),
+                                contentDescription = null
+                            )
+                        },
+                        selectedContentColor = Color.White,
+                        unselectedContentColor = Color(0xFF959697)
                     )
                 }
             }
